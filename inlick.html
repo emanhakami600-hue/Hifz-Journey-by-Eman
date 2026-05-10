@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مشروع متابعة حفظ القرآن الكريم</title>
+    <style>
+        :root {
+            --primary-color: #2d5a27;
+            --secondary-color: #f4fdf4;
+            --accent-color: #d4af37;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f0;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .step-card {
+            background: var(--secondary-color);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e0eee0;
+        }
+
+        .step-card span {
+            display: block;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        /* Form Styling */
+        .input-section {
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        label {
+            margin-bottom: 5px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #1e3d1a;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .status-done { color: green; font-weight: bold; }
+        .status-missed { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>برنامج متابعة حفظ القرآن الكريم</h1>
+
+    <!-- خطوات البرنامج -->
+    <div class="steps-grid">
+        <div class="step-card"><span>1</span>نحدد الهدف</div>
+        <div class="step-card"><span>2</span>نقسم الحفظ</div>
+        <div class="step-card"><span>3</span>نحفظ يومياً</div>
+        <div class="step-card"><span>4</span>نراجع باستمرار</div>
+        <div class="step-card"><span>5</span>نختبر أنفسنا</div>
+    </div>
+
+    <!-- مدخلات تسجيل التقدم -->
+    <div class="input-section">
+        <div class="input-group">
+            <label>التاريخ</label>
+            <input type="date" id="date">
+        </div>
+        <div class="input-group">
+            <label>المقدار (سورة/صفحة)</label>
+            <input type="text" id="target" placeholder="مثلاً: سورة البقرة">
+        </div>
+        <div class="input-group">
+            <label>حفظ اليوم؟</label>
+            <select id="saveStatus">
+                <option value="تم">تم ✅</option>
+                <option value="لم يتم">لم يتم ❌</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label>المراجعة؟</label>
+            <select id="reviewStatus">
+                <option value="تم">تم ✅</option>
+                <option value="لم يتم">لم يتم ❌</option>
+            </select>
+        </div>
+        <button onclick="addEntry()">تسجيل الإنجاز</button>
+    </div>
+
+    <!-- جدول التقدم -->
+    <table id="progressTable">
+        <thead>
+            <tr>
+                <th>التاريخ</th>
+                <th>الهدف / المقدار</th>
+                <th>الحفظ</th>
+                <th>المراجعة</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- الصفوف ستظهر هنا برمجياً -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // تعيين تاريخ اليوم تلقائياً
+    document.getElementById('date').valueAsDate = new Date();
+
+    function addEntry() {
+        const date = document.getElementById('date').value;
+        const target = document.getElementById('target').value;
+        const saveStatus = document.getElementById('saveStatus').value;
+        const reviewStatus = document.getElementById('reviewStatus').value;
+
+        if (target === "") {
+            alert("يرجى تحديد الهدف أو المقدار");
+            return;
+        }
+
+        const table = document.getElementById('progressTable').getElementsByTagName('tbody')[0];
+        const newRow = table.insertRow(0); // إضافة السجل الجديد في الأعلى
+
+        newRow.innerHTML = `
+            <td>${date}</td>
+            <td>${target}</td>
+            <td class="${saveStatus === 'تم' ? 'status-done' : 'status-missed'}">${saveStatus}</td>
+            <td class="${reviewStatus === 'تم' ? 'status-done' : 'status-missed'}">${reviewStatus}</td>
+        `;
+
+        // مسح خانة الهدف بعد الإضافة
+        document.getElementById('target').value = "";
+    }
+</script>
+
+</body>
+</html>
